@@ -75,6 +75,11 @@ MPY_FILES := $(patsubst $(PYTHON_SRC)%.py,$(PYTHON_SRC)%.mpy,$(PYTHON_FILES))
 # General defintions
 SED_CMD :=sed -i'.orig' -e
 
+
+USERNAME := $(shell whoami)
+USERNAME_FILE = src/user.py
+USERNAME_MPY = src/user.mpy
+
 # Color defintions
 GREEN := \033[32m
 RED := \033[31m
@@ -85,6 +90,12 @@ ifeq ($(strip $(DONT_STRIP_HEX_FILE)),)
 endif
 
 compile: $(MPY_FILES)
+
+$(USERNAME_FILE):
+	echo "USER = '$(USER)'" > $@
+
+$(USERNAME_MPY): $(USERNAME_FILE)
+	mpy-cross $<
 
 $(PYTHON_SRC)%.mpy: $(PYTHON_SRC)%.py
 	mpy-cross $<

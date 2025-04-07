@@ -1,6 +1,7 @@
 from nucleo_api import *
 import os
 import gpio_config_builder
+from user import USER
 
 VERSION = "io_config -- version 1.2.2"
 config_filename = "gpio_config_def.py"
@@ -595,6 +596,7 @@ def run(part_name="** unspecified **", voltage=1.6, analog=False):
     print("===================================================================")
     print(f"{VERSION}")
     print(f"voltage = {voltage:1.2f}, analog = {analog}")
+    print(f"Compiled by: {USER}")
     print("===================================================================")
 
     print(" ")
