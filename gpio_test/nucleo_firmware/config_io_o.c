@@ -1,7 +1,7 @@
 #include "../gpio_config/gpio_config_io.h"
 #include "../riscv_firmware_src/defs.h"
-#include "src/send_packet.h"
 #include <gpio_config_data_sample.h>
+#include <send_packet.h>
 
 void set_registers() {
 
