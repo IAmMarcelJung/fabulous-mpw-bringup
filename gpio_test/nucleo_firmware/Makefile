@@ -44,6 +44,7 @@ $(USERNAME_FILE):
 $(USERNAME_MPY): $(USERNAME_FILE)
 	mpy-cross $<
 	$(COPY_CMD) $@ $(FLASH)
+	rm $<
 
 $(PYTHON_SRC)%.mpy: $(PYTHON_SRC)%.py
 	mpy-cross $<
