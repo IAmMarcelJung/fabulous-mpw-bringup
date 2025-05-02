@@ -6,3 +6,4 @@
 *.mpy
 *.rules.verible_lint
 compile_commands.json
+__pycache__/

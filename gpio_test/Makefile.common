@@ -1,0 +1,69 @@
+
+# Color defintions
+GREEN := \033[32m
+RED := \033[31m
+RESET_COLOR := \033[0m
+
+CONFIG_FILE_PATTERN := gpio_config_def
+CONFIG_FILE := gpio_config_def.py
+CONFIG_FILES_DIR := gpio_config_files
+IO_CONFIG_FILE_PATTERN := gpio_config_io
+# Set VOLTAGE_STR based on whether VOLTAGE or DEFAULT_VOLTAGE is defined
+VOLTAGE ?= 1.5
+VOLTAGE_STR := $(subst .,_,$(VOLTAGE))
+PART_OUTPUT_FILE := $(CONFIG_FILE_PATTERN)_part_$(PART)_$(VOLTAGE_STR)_V.py
+PART_OUTPUT_DIR := part_$(PART)
+CONFIG_FILE_TARGET = $(CONFIG_FILES_DIR)/$(PART_OUTPUT_DIR)/$(PART_OUTPUT_FILE)
+
+TOOLCHAIN_PREFIX := riscv64-unknown-elf
+
+# Compiler and linker flags
+CFLAGS := -O3 -g -mabi=ilp32 -march=rv32i_zicsr -D__vexriscv__ -ffreestanding -nostdlib
+LDSCRIPT := ../riscv_firmware_src/sections.lds
+LDFLAGS := -Wl,-Bstatic,-T,$(LDSCRIPT),--strip-debug
+
+SED_CMD :=sed -i'.orig' -e
+
+ifeq ($(strip $(DONT_STRIP_HEX_FILE)),)
+	STRIP = $(SED_CMD) '1,/@00/!d' $@
+endif
+
+# Definitions related to firmware creation
+INCLUDES := \
+	-I../ \
+	-I../riscv_firmware_src \
+	-I../hw \
+	-I../gpio_config \
+	-I../firmware_helpers/upload_bitstream \
+	-I../firmware_helpers/gpio \
+	-I../firmware_helpers/bitstream \
+	-I../firmware_helpers/register_actions \
+	-I../firmware_helpers/helpers \
+	-I../firmware_helpers/global_defs
+
+SRC_FILES := \
+	../riscv_firmware_src/crt0_vex.S \
+	../riscv_firmware_src/isr.c \
+	../riscv_firmware_src/stub.c \
+	../riscv_firmware_src/send_packet.c \
+	../gpio_config/gpio_config_io.c \
+	../firmware_helpers/upload_bitstream/upload_bitstream.c \
+	../firmware_helpers/gpio/gpio.c \
+	../firmware_helpers/register_actions/register_actions.c \
+	../firmware_helpers/helpers/helpers.c \
+
+check-device:
+	@if [ -z "$(strip $(PART))" ]; then \
+		echo "$(RED)Error: Nucleo device file not found. Probably the board is not connected?.$(RESET_COLOR)"; exit 1; \
+	fi
+
+check-part:
+	@if [ -z "$(strip $(PART))" ]; then \
+		echo "$(RED)Error: PART not defined. Please add 'PART=<part_id>'.$(RESET_COLOR)"; exit 1; \
+	fi
+check-shuttle:
+	@if [ -z "$(strip $(SHUTTLE))" ]; then \
+		echo "$(RED)Error: SHUTTLE not defined. Please add 'SHUTTLE=<shuttle>'.$(RESET_COLOR)"; exit 1; \
+	fi
+
+check-params: check-part check-shuttle

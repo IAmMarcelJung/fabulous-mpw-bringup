@@ -6,6 +6,7 @@ import sys, os
 from pyftdi.spi import SpiController, SpiGpioPort
 import binascii
 import asyncio
+from log import setup_logger
 from loguru import logger
 from asyncio import Event
 from io import StringIO
@@ -63,24 +64,6 @@ GPIO_UART_EN_POS = 8
 GPIO_RX_LED_POS = 10
 GPIO_TX_LED_POS = 11
 
-
-def setup_logger(verbosity: int):
-    # Remove the default logger to avoid duplicate logs
-    logger.remove()
-
-    # Define logger format
-    if verbosity >= 1:
-        log_format = (
-            "[<level>{level:}</level>]: "
-            "<cyan>[{time:DD-MM-YYYY HH:mm:ss]}</cyan> | "
-            "<green>[{name}</green>:<green>{function}</green>:<green>{line}]</green> - "
-            "<level>{message}</level>"
-        )
-    else:
-        log_format = "[<level>{level:}</level>]: " "<level>{message}</level>"
-
-    # Add logger to write logs to stdout
-    logger.add(sys.stdout, format=log_format, level="DEBUG", colorize=True)
 
 class Led:
     """Class definition for the LED connected to the FTDI chip."""
@@ -479,8 +462,8 @@ async def main() -> None:
         await toggle_led_during_ftdi_action(ftdi.memory.erase, ftdi, 0.5)
     except MemoryError:
         logger.warning(
-                "Please power cycle the board and try flashing again"
-                + " immediately! Also check that the UART_EN jumper is not set.",
+            "Please power cycle the board and try flashing again"
+            + " immediately! Also check that the UART_EN jumper is not set.",
         )
         ftdi.led.set_value(GPIO_TX_LED_POS, False)
         exit(1)
