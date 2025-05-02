@@ -112,7 +112,7 @@ def build_stream_dependent(stream, config):
         # stream += '0b1100000001001'
         s = stream + "1100000000001"
     elif config == C_MGMT_IN:
-        s = stream + "0010000000011"
+        s = stream + "1000000000011"
     elif config == C_DISABLE:
         s = stream + "0000000000000"
     elif config == C_ALL_ONES:
@@ -137,7 +137,7 @@ def build_stream_independent(stream, config):
         # stream += '110000000100'
         s = stream + "110000000000"
     elif config == C_MGMT_IN:
-        s = stream + "001000000001"
+        s = stream + "10000000001"
     elif config == C_DISABLE:
         s = stream + "000000000000"
     elif config == C_ALL_ONES:
@@ -163,7 +163,7 @@ def build_stream_none(stream, config, bypass):
     elif config == C_MGMT_IN and bypass:
         s = stream + "0010000000011"
     elif config == C_MGMT_IN:
-        s = stream + "0010000000011"
+        s = stream + "1000000000011"
     elif config == C_DISABLE:
         s = stream + "0000000001011"
     elif config == C_ALL_ONES:

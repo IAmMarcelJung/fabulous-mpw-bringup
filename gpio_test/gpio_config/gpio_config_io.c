@@ -46,7 +46,7 @@ void clear_registers() {
 void gpio_config_io(char const *const config_stream) {
     char n_bits = config_stream[0];
     // start at  offset 1, first value is n_bits
-    for (char i = 1u; i < n_bits + 1; i++) {
+    for (char i = 1u; i < n_bits; i++) {
         reg_mprj_xfer = config_stream[i];
         delay(WAIT);
         reg_mprj_xfer = config_stream[i] + 0x10;

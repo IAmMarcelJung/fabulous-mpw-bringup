@@ -164,12 +164,36 @@ class Test:
         self.en_1v8.off()
         time.sleep(1)
 
-        # Keep 3.3V supply at 3.3V
-        self.supply.write_3v3(0x3A)
+        self.change_power()
+
+        self.en_1v8.on()
+        self.en_3v3.on()
+        time.sleep(1)
+
+    def change_power(self):
+
+        p_val_1_8_v, p_val_3_3_v = self.calc_digipot_write_values(False)
+
+        self.supply.write_3v3(p_val_3_3_v)
+
+        self.supply.write_1v8(p_val_1_8_v)
+        time.sleep(1)
+
+    def calc_digipot_write_values(self, is_8_bit_device):
+        if is_8_bit_device:
+            steps = 257
+            p_val_3_3_v = 0x3A
+            print("Using potentiometer values for the MCP4661 (8-bit device)")
+        else:
+            steps = 129
+            p_val_3_3_v = 0x1A
+            print("Using potentiometer values for the MCP4641 (7-bit device)")
 
         # Note:
-        # Potentiometer is MCP4661 and has 10k ohms in
-        # 257 steps = 38.9 ohms/step.
+        # Potentiometer is MCP46x1 and has 10k ohms in:
+
+        # 257 steps = 38.9 ohms/step.for MCP4661
+        # 129 steps = 77.5 ohms/step.for MCP4641
         # LDO is MIC2211, which has an output equal to
         # R1 = R2 * (Vout / 1.25 - 1)
         # Where R1 is between Vout and Adj and
@@ -177,32 +201,18 @@ class Test:
         # The caravel board has R1 = 360 and
         # R2 = 5k // (500 + potentiometer value)
 
-        R2 = 360 / ((self.voltage / 1.25) - 1)
-        Rpot = (1 / (1 / R2 - 1 / 5000)) - 500
-        P = Rpot / 38.911
-        Pval = int(P)
+        R1 = 360
+        R2 = R1 / ((self.voltage / 1.25) - 1)
+        Rpot = (1 / (1 / R2 - 1 / 4999)) - 499
+        R_AB = 10_000
 
-        # print('Writing ' + str(Pval) + ' to potentiometer.')
-        self.supply.write_1v8(Pval)
+        resistance_per_step = R_AB * (1 / steps)
+        P = Rpot / resistance_per_step
+        # -1 is just a correction that turned out to an output voltage which is
+        # a bit closer to the desired voltage
+        p_val_1_8_v = round(P) - 1
 
-        time.sleep(1)
-        self.en_1v8.on()
-        self.en_3v3.on()
-        time.sleep(1)
-
-    def change_power(self):
-
-        # Keep 3.3V supply at 3.3V
-        self.supply.write_3v3(0x3A)
-
-        R2 = 360 / ((self.voltage / 1.25) - 1)
-        Rpot = (1 / (1 / R2 - 1 / 5000)) - 500
-        P = Rpot / 38.911
-        Pval = int(P)
-
-        self.supply.write_1v8(Pval)
-
-        time.sleep(1)
+        return p_val_1_8_v, p_val_3_3_v
 
     def turn_off_devices(self):
         self.en_1v8.off()
