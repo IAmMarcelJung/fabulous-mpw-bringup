@@ -379,7 +379,7 @@ class MyFtdi(Ftdi):
         for dev in devlist:
             url = dev.split("(")[0].strip()
             name = "(" + dev.split("(")[1]
-            if name == "(Single RS232-HS)":
+            if name in ["(Single RS232-HS)", "(￿￿￿￿￿￿)"]:
                 ftdi_devices.append(url)
         if len(ftdi_devices) == 0:
             logger.error("Error: No matching FTDI devices on USB bus!")

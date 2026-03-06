@@ -18,7 +18,7 @@ CONFIG_FILE_TARGET = $(CONFIG_FILES_DIR)/$(PART_OUTPUT_DIR)/$(PART_OUTPUT_FILE)
 TOOLCHAIN_PREFIX := riscv64-unknown-elf
 
 # Compiler and linker flags
-CFLAGS := -O3 -g -mabi=ilp32 -march=rv32i_zicsr -D__vexriscv__ -ffreestanding -nostdlib
+CFLAGS := -O3 -Wall -Wpedantic -g -mabi=ilp32 -march=rv32i_zicsr -D__vexriscv__ -ffreestanding -nostdlib
 LDSCRIPT := ../riscv_firmware_src/sections.lds
 LDFLAGS := -Wl,-Bstatic,-T,$(LDSCRIPT),--strip-debug
 

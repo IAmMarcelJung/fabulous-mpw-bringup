@@ -1,3 +1,4 @@
+#include <bitstream.h>
 #include <defs.h>
 #include <global_defs.h>
 #include <gpio_config_data.h>
@@ -13,12 +14,7 @@ int main() {
   reg_gpio_oe = 1;
   reg_gpio_out = 1;
 
-  reg_mprj_datal =
-      (1u << REGISTER_7_DATA_BIT_POS) | (1u << REGISTER_8_DATA_BIT_POS) |
-      (1u << REGISTER_9_DATA_BIT_POS) | (1u << REGISTER_10_DATA_BIT_POS) |
-      (1u << REGISTER_11_DATA_BIT_POS) | (1u << REGISTER_12_DATA_BIT_POS);
-
-  blink(12, 2500000);
+  blink(6, 2500000);
 
   // Configure the IOs so the eFPGA has access to them
   reg_gpio_out = 1;

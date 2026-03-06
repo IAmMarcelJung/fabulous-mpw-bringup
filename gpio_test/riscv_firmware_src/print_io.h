@@ -2,6 +2,7 @@
 #define _PRINT_IO_H_
 
 #include <defs.h>
+#include <gpio_config_io.h>
 
 void uart_putchar(uint32_t c);
 void print(const char *p);

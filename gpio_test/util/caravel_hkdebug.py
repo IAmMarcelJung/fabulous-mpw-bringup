@@ -107,7 +107,7 @@ gooddevs = []
 for dev in devlist:
     url = dev.split("(")[0].strip()
     name = "(" + dev.split("(")[1]
-    if name == "(Single RS232-HS)":
+    if name in ["(Single RS232-HS)", "(￿￿￿￿￿￿)"]:
         gooddevs.append(url)
 if len(gooddevs) == 0:
     print("Error:  No matching FTDI devices on USB bus!")
