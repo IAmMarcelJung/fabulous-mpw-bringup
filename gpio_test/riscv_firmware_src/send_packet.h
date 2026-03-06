@@ -1,6 +1,8 @@
 #ifndef SEND_PACKET_H
 #define SEND_PACKET_H
 
+#include <defs.h>
+
 #define PULSE_WIDTH 250000
 
 void count_down(const int d);
