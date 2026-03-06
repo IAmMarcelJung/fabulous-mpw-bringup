@@ -44,7 +44,7 @@ module top (
     input wire [31:0] bram7_rd_data,
     output wire [7:0] bram7_config
 );
-    localparam N = 893;
+    localparam N = 393;
     wire [N:0] osc;
     genvar ii;
     generate
